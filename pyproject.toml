@@ -1,0 +1,78 @@
+[tool.poetry]
+name = "cosmicpython-practice"
+version = "0.1.0"
+description = ""
+authors = ["Youngbeom Choi <helloybz@gmail.com>"]
+readme = "README.md"
+packages = [{include = "cosmicpython_practice"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+poethepoet = "^0.20.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.1"
+black = "^23.3.0"
+isort = "^5.12.0"
+pylint = "^2.17.4"
+mypy = "^1.3.0"
+pytest-cov = "^4.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = ["R0903"]
+
+[tool.poe.tasks]
+
+  [tool.poe.tasks.format-isort]
+  help = "Run isort on the code base"
+  cmd  = "isort ."
+
+  [tool.poe.tasks.format-black]
+  help = "Run black on the code base"
+  cmd  = "black ."
+
+  [tool.poe.tasks.format]
+  help     = "Run formating tools on the code base"
+  sequence = ["format-isort", "format-black"]
+
+  [tool.poe.tasks.clean]
+  help = "Remove generated files"
+  cmd  = """
+    rm -rf .coverage
+           .mypy_cache
+           .pytest_cache
+           ./**/__pycache__
+  """
+
+  [tool.poe.tasks.test]
+  help = "Run unit and feature tests"
+  cmd  = "pytest --cov=cosmicpython tests/"
+
+  [tool.poe.tasks.types]
+  help = "Run the type checker"
+  cmd  = "mypy cosmicpython --ignore-missing-imports"
+
+  [tool.poe.tasks.lint]
+  help = "Run the linter"
+  cmd  = "pylint cosmicpython --disable=missing-docstring"
+
+  [tool.poe.tasks.style-black]
+  help = "Validate black code style"
+  cmd  = "black . --check --diff"
+
+  [tool.poe.tasks.style-isort]
+  help = "Validate isort code style"
+  cmd  = "isort . --check --diff"
+
+  [tool.poe.tasks.style]
+  help = "Validate code style"
+  sequence = ["style-isort", "style-black"]
+
+  [tool.poe.tasks.check]
+  help     = "Run all checks on the code base"
+  sequence = ["style", "types", "lint", "test"]
