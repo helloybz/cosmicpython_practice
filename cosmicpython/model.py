@@ -35,3 +35,24 @@ class Batch:
 
     def can_allocate(self, orderline: OrderLine) -> bool:
         return self.sku == orderline.sku and self.available_quantity >= orderline.qty
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, Batch) and self.ref == other.ref
+
+    def __hash__(self) -> int:
+        return hash(self.ref)
+
+    def __gt__(self, other) -> bool:
+        if self.eta is None:
+            return False
+        if other.eta is None:
+            return True
+        return self.eta > other.eta
+
+
+def allocate(line: OrderLine, batches: list[Batch]) -> str:
+    best_batch = next(batch for batch in sorted(batches) if batch.can_allocate(line))
+
+    best_batch.allocate(line)
+
+    return best_batch.ref
