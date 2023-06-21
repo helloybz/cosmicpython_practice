@@ -51,8 +51,15 @@ class Batch:
 
 
 def allocate(line: OrderLine, batches: list[Batch]) -> str:
-    best_batch = next(batch for batch in sorted(batches) if batch.can_allocate(line))
-
-    best_batch.allocate(line)
-
+    try:
+        best_batch = next(
+            batch for batch in sorted(batches) if batch.can_allocate(line)
+        )
+        best_batch.allocate(line)
+    except StopIteration as exc:
+        raise OutOfStock(f"Out of stock for sku {line.sku}") from exc
     return best_batch.ref
+
+
+class OutOfStock(Exception):
+    ...
