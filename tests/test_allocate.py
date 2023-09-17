@@ -1,23 +1,6 @@
-from datetime import date, timedelta
-
 import pytest
 
 from cosmicpython.model import Batch, OrderLine, OutOfStock, allocate
-
-
-@pytest.fixture
-def tomorrow():
-    return date.today() + timedelta(days=1)
-
-
-@pytest.fixture
-def today():
-    return date.today()
-
-
-@pytest.fixture
-def later():
-    return date.today() + timedelta(days=2)
 
 
 def test_prefers_current_stock_batches_to_shipments(tomorrow):
@@ -54,7 +37,7 @@ def test_returns_allocated_batch_ref(tomorrow):
     assert allocation == in_stock_batch.ref
 
 
-def test_raises_out_of_stock_exception_if_cannot_allocate():
+def test_raises_out_of_stock_exception_if_cannot_allocate(today):
     batch = Batch("batch1", "SMALL-FORK", 10, eta=today)
     allocate(OrderLine("order1", "SMALL-FORK", 10), [batch])
 
