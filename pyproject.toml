@@ -10,6 +10,7 @@ packages = [{include = "cosmicpython_practice"}]
 python = "^3.11"
 poethepoet = "^0.20.0"
 sqlalchemy = "^2.0.20"
+flask = "^3.0.0"
 
 
 [tool.poetry.group.dev.dependencies]

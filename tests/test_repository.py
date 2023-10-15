@@ -1,4 +1,5 @@
 from sqlalchemy import text
+from sqlalchemy.orm import Session
 
 from cosmicpython import model, repository
 
@@ -28,7 +29,7 @@ def test_repository_can_save_a_batch(session):
     ]
 
 
-def insert_order_line(session):
+def insert_order_line(session: Session):
     session.execute(
         text(
             r"""
@@ -53,7 +54,7 @@ def insert_order_line(session):
     return orderline_id
 
 
-def insert_batch(session, batch_id):
+def insert_batch(session: Session, batch_id):
     session.execute(
         text(
             rf"""
@@ -77,7 +78,7 @@ def insert_batch(session, batch_id):
     return batch_id
 
 
-def insert_allocation(session, orderline_id, batch_id):
+def insert_allocation(session: Session, orderline_id, batch_id):
     [[batch_id]] = session.execute(
         text(
             rf"""
@@ -124,7 +125,7 @@ def insert_allocation(session, orderline_id, batch_id):
     return orderline_id, batch_id
 
 
-def test_repository_can_retrieve_a_batch_with_allocations(session):
+def test_repository_can_retrieve_a_batch_with_allocations(session: Session):
     orderline_id = insert_order_line(session)
     batch1_id = insert_batch(session, "batch1")
     insert_batch(session, "batch2")

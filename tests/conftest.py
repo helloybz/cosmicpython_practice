@@ -2,7 +2,7 @@ from datetime import date, timedelta
 
 from pytest import fixture
 from sqlalchemy import create_engine
-from sqlalchemy.orm import clear_mappers, sessionmaker
+from sqlalchemy.orm import Session, clear_mappers, sessionmaker
 
 from cosmicpython.orm import registry, start_mappers
 
@@ -15,7 +15,7 @@ def in_memory_db():
 
 
 @fixture
-def session(in_memory_db) -> None:
+def session(in_memory_db) -> Session:
     start_mappers()
     yield sessionmaker(bind=in_memory_db)()
     clear_mappers()
